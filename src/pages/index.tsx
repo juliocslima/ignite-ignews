@@ -1,7 +1,19 @@
-import styles from '../styles/home.module.css';
+import Head from 'next/head';
 
 export default function Home() {
-  return (
-    <h1 className={styles.title}>Hello World</h1>
+  return ( 
+    <>   
+      <Head>
+        <title>Início | ig.news</title>
+      </Head>
+      
+      <main>
+        <section>
+
+        </section>
+
+        <img src="/images/avatar.svg" alt="Girl coding" />
+      </main>
+    </>
   )
 }
