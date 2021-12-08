@@ -29,7 +29,7 @@ export function SubscribeButton({ priceId }: SubscribeButtonProps) {
 
       await stripe.redirectToCheckout({ sessionId });
     } catch(err) {
-      toast.error('Erro na criação da ChackouSession');
+      toast.error('Erro na criação da CheckouSession');
     }
   }
 

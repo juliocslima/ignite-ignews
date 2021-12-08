@@ -3,7 +3,6 @@ import { getSession } from 'next-auth/react';
 import { query as q } from 'faunadb';
 import { fauna } from '../../../services/faunadb';
 import { stripe } from '../../../services/stripe';
-import email from 'next-auth/providers/email';
 
 type User = {
   ref: {
