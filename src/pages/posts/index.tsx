@@ -1,10 +1,24 @@
+import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import Prismic from '@prismicio/client';
-import Head from 'next/head';
+import { RichText } from 'prismic-dom';
+
 import { getPrismicClient } from '../../services/prismic';
+
 import styles from './styles.module.scss';
 
-export default function Posts() {
+type Post = {
+  slug: string;
+  title: string;
+  updatedAt: string;
+  excerpt: string;
+}
+
+interface PostsProps {
+  posts: Post[];
+}
+
+export default function Posts( { posts }: PostsProps ) {
   return(
     <>
       <Head>
@@ -13,21 +27,13 @@ export default function Posts() {
 
       <main className={styles.container}>
         <div className={styles.posts}>
-          <a href="#">
-            <time>8 de dezembro de 2021</time>
-            <strong>Creating a Monorepo with Lerna & Yarn Workspaces</strong>
-            <p>In this guide, you will learn how to create a Monorepo to manage multiple packages with a shared build, test, and release process.</p>
-          </a>
-          <a href="#">
-            <time>9 de dezembro de 2021</time>
-            <strong>How Stripe Designs Beautiful Websites</strong>
-            <p>Examining the tips and tricks used to make Stripe's website design a notch above the rest.</p>
-          </a>
-          <a href="#">
-            <time>10 de dezembro de 2021</time>
-            <strong>Past, Present, and Future of React State Management</strong>
-            <p>Learn about the history of state management in React and what the preferred solutions are today.</p>
-          </a>
+          { posts.map(post => (
+            <a key={post.slug} href="#">
+              <time>{post.updatedAt}</time>
+              <strong>{post.title}</strong>
+              <p>{post.excerpt}</p>
+            </a>
+          )) }
         </div>
       </main>
     </>
@@ -45,9 +51,20 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   );
 
-  console.log(JSON.stringify(response, null, 2));
+  const posts = response.results.map(post => {
+    return {
+      slug: post.uid,
+      title: RichText.asText(post.data.title),
+      excerpt: post.data.content.find(content => content.type === 'paragraph')?.text ?? '',
+      updatedAt: new Date(post.last_publication_date).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      })
+    }
+  })
 
   return {
-    props: {}
+    props: { posts }
   }
 }
