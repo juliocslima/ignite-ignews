@@ -75,7 +75,6 @@ export default NextAuth({
         )
       )
       .then((ret) => {
-        console.log(ret);
         return true;
       })
       .catch((err) => {
